@@ -1,6 +1,10 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
-
+class City():
+  def __init__(self, name, lat, lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -14,20 +18,31 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
+import os
+import csv
+
 cities = []
 
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
-    return cities
+  with open(os.path.dirname(__file__) + '/cities.csv') as file:
+    reader = csv.reader(file, delimiter=',')
+    line_num = 0
+    for row in reader:
+      if line_num == 0:
+        line_num += 1
+      else:
+        cities.append(City(row[0], float(row[3]), float(row[4])))
+        line_num += 1
+  return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
-    print(c)
+    print(c.name, c.lat, c.lon)
 
 # STRETCH GOAL!
 #
@@ -59,6 +74,10 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+# input1 = input('Enter lat1,lon1: ').split(',')
+# input2 = input('Enter lat2,lon2: ').split(',')
+# print(f'\nlat1 is {input1[0]}, {input1[1]}')
+# print(f'\nlat2 is {input2[0]}, {input2[1]}')
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
@@ -67,5 +86,24 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
+
+  f_lat1 = float(lat1)
+  f_lon1 = float(lon1)
+  f_lat2 = float(lat2)
+  f_lon2 = float(lon2)
+
+  if f_lat1 > f_lat2:
+    f_lat1 = float(lat2)
+    f_lat2 = float(lat1)
+
+  if f_lon1 > f_lon2:
+    f_lon1 = float(lon2)
+    f_lon2 = float(lon1)
+
+  for c in cities:
+    if (c.lat >= f_lat1 and c.lat <= f_lat2):
+      if (c.lon >= f_lon1 and c.lon <= f_lon2):
+        print(f'{c.name}: ({c.lat},{c.lon})')
+        within.append(c)
 
   return within
